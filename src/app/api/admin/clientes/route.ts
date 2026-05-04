@@ -37,10 +37,11 @@ export async function GET() {
         : "expired",
   }));
 
+  type Resultado = typeof resultado[number];
   const total = clientes.length;
-  const ativos = resultado.filter((c) => c.statusReal === "active").length;
-  const trial = resultado.filter((c) => c.statusReal === "trial").length;
-  const expirados = resultado.filter((c) => c.statusReal === "expired").length;
+  const ativos = resultado.filter((c: Resultado) => c.statusReal === "active").length;
+  const trial = resultado.filter((c: Resultado) => c.statusReal === "trial").length;
+  const expirados = resultado.filter((c: Resultado) => c.statusReal === "expired").length;
   const mrr = ativos * 39;
 
   return NextResponse.json({ clientes: resultado, total, ativos, trial, expirados, mrr });
