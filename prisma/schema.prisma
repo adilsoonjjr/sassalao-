@@ -3,7 +3,9 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
 model User {
@@ -12,11 +14,10 @@ model User {
   email        String        @unique
   password     String
   phone        String?
-  // Assinatura
-  planStatus   String        @default("trial")   // trial | active | expired
-  trialEndsAt  DateTime      @default(dbgenerated("(datetime('now', '+7 days'))"))
+  planStatus   String        @default("trial")
+  trialEndsAt  DateTime      @default(dbgenerated("NOW() + INTERVAL '7 days'"))
   planEndsAt   DateTime?
-  mpPayerId    String?       // Mercado Pago payer ID
+  mpPayerId    String?
   createdAt    DateTime      @default(now())
   updatedAt    DateTime      @updatedAt
 
