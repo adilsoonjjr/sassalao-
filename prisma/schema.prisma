@@ -1,0 +1,74 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model User {
+  id           String        @id @default(cuid())
+  name         String
+  email        String        @unique
+  password     String
+  phone        String?
+  // Assinatura
+  planStatus   String        @default("trial")   // trial | active | expired
+  trialEndsAt  DateTime      @default(dbgenerated("(datetime('now', '+7 days'))"))
+  planEndsAt   DateTime?
+  mpPayerId    String?       // Mercado Pago payer ID
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+
+  agendamentos Agendamento[]
+  financeiros  Financeiro[]
+  gastos       Gasto[]
+}
+
+model Agendamento {
+  id          String      @id @default(cuid())
+  userId      String
+  clienteNome String
+  clienteTel  String
+  servico     String
+  valor       Float
+  data        DateTime
+  horario     String
+  observacoes String?
+  status      String      @default("agendado")
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  user        User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  financeiro  Financeiro?
+}
+
+model Financeiro {
+  id             String       @id @default(cuid())
+  userId         String
+  agendamentoId  String?      @unique
+  tipo           String
+  categoria      String
+  descricao      String
+  valor          Float
+  formaPagamento String?
+  clienteNome    String?
+  servico        String?
+  data           DateTime     @default(now())
+  createdAt      DateTime     @default(now())
+
+  user           User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  agendamento    Agendamento? @relation(fields: [agendamentoId], references: [id])
+}
+
+model Gasto {
+  id        String   @id @default(cuid())
+  userId    String
+  tipo      String
+  descricao String
+  valor     Float
+  data      DateTime @default(now())
+  createdAt DateTime @default(now())
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
