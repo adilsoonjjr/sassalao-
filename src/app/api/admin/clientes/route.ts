@@ -26,7 +26,8 @@ export async function GET() {
   });
 
   const agora = new Date();
-  const resultado = clientes.map((c) => ({
+  type Cliente = typeof clientes[number];
+  const resultado = clientes.map((c: Cliente) => ({
     ...c,
     statusReal:
       c.planStatus === "active" && c.planEndsAt && c.planEndsAt > agora
