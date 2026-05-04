@@ -27,20 +27,28 @@ export default function CadastroPage() {
     }
 
     setLoading(true);
-    const res = await fetch("/api/auth/register", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name: form.name, email: form.email, phone: form.phone, password: form.password }),
-    });
+    try {
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 15000);
+      const res = await fetch("/api/auth/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name: form.name, email: form.email, phone: form.phone, password: form.password }),
+        signal: controller.signal,
+      });
+      clearTimeout(timeout);
 
-    const data = await res.json();
-    if (!res.ok) {
-      setError(data.error || "Erro ao cadastrar");
+      const data = await res.json();
+      if (!res.ok) {
+        setError(data.error || "Erro ao cadastrar");
+        setLoading(false);
+        return;
+      }
+      router.push("/login?cadastro=ok");
+    } catch {
+      setError("Erro de conexão. Tente novamente.");
       setLoading(false);
-      return;
     }
-
-    router.push("/login?cadastro=ok");
   }
 
   return (
