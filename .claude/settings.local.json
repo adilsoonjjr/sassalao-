@@ -26,7 +26,14 @@
       "Bash(git init *)",
       "Bash(git config *)",
       "Bash(git remote *)",
-      "Bash(git add *)"
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)",
+      "Bash(git push *)",
+      "Bash(git commit *)",
+      "Bash(npx next *)",
+      "Bash(DATABASE_URL=\"postgresql://neondb_owner:npg_tp9MFuXzVeq6@ep-royal-river-acw80kdt.sa-east-1.aws.neon.tech/neondb?sslmode=require\" npx prisma migrate deploy)",
+      "Bash(DATABASE_URL=\"postgresql://neondb_owner:npg_tp9MFuXzVeq6@ep-royal-river-acw80kdt.sa-east-1.aws.neon.tech/neondb?sslmode=require\" npx prisma db push)",
+      "Bash(node scripts/generate-icons.mjs)"
     ]
   }
 }
