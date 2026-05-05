@@ -68,7 +68,7 @@ export default function LandingPage() {
           </Link>
         </div>
         <p className="text-xs mt-4" style={{ color: "var(--muted)" }}>
-          Após o teste, apenas R$ 39/mês. Cancele quando quiser.
+          Após o teste, apenas R$ 19,90/mês. Cancele quando quiser.
         </p>
       </section>
 
@@ -156,10 +156,10 @@ export default function LandingPage() {
             Mais popular
           </div>
           <div className="mb-1">
-            <span className="text-5xl font-bold">R$ 39</span>
+            <span className="text-5xl font-bold">R$ 19,90</span>
             <span style={{ color: "var(--muted)" }}>/mês</span>
           </div>
-          <p className="text-sm mb-6" style={{ color: "var(--muted)" }}>ou R$ 390/ano (2 meses grátis)</p>
+          <p className="text-sm mb-6" style={{ color: "var(--muted)" }}>ou R$ 199/ano (2 meses grátis)</p>
           <ul className="text-sm text-left space-y-2 mb-8">
             {[
               "✅ Agendamentos ilimitados",
