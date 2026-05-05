@@ -60,7 +60,7 @@ export default function PlanosPage() {
         <div className="rounded-3xl p-6 shadow-sm" style={{ background: "var(--card)", border: "1.5px solid var(--border)" }}>
           <p className="text-sm font-semibold mb-1" style={{ color: "var(--muted)" }}>Mensal</p>
           <div className="mb-4">
-            <span className="text-4xl font-bold">R$ 39</span>
+            <span className="text-4xl font-bold">R$ 19,90</span>
             <span style={{ color: "var(--muted)" }}>/mês</span>
           </div>
           <ul className="text-sm space-y-2 mb-6" style={{ color: "var(--muted)" }}>
@@ -87,15 +87,15 @@ export default function PlanosPage() {
           </div>
           <p className="text-sm font-semibold mb-1 opacity-80">Anual · Melhor valor</p>
           <div className="mb-1">
-            <span className="text-4xl font-bold">R$ 390</span>
+            <span className="text-4xl font-bold">R$ 199</span>
             <span className="opacity-80">/ano</span>
           </div>
-          <p className="text-xs mb-4 opacity-70">equivale a R$ 32,50/mês</p>
+          <p className="text-xs mb-4 opacity-70">equivale a R$ 16,58/mês</p>
           <ul className="text-sm space-y-2 mb-6 opacity-90">
             <li>✅ Tudo do plano mensal</li>
             <li>✅ Prioridade no suporte</li>
             <li>✅ Acesso a novas funções</li>
-            <li>✅ Economia de R$ 78/ano</li>
+            <li>✅ Economia de R$ 39,80/ano</li>
             <li>&nbsp;</li>
           </ul>
           <button
