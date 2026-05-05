@@ -11,6 +11,10 @@ const PUBLIC_PATHS = [
   "/planos",
   "/api/auth",
   "/api/webhook",
+  "/manifest.webmanifest",
+  "/sw.js",
+  "/icons",
+  "/logo.svg",
 ];
 
 export default auth((req) => {
