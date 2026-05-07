@@ -128,7 +128,7 @@ export default function DashboardPage() {
         {(data?.agendamentosHoje.length ?? 0) === 0 ? (
           <Card>
             <div className="text-center py-6">
-              <div className="text-4xl mb-2">📅</div>
+              <div className="text-3xl mb-2">📅</div>
               <p className="font-medium">Nenhum agendamento para hoje</p>
               <p className="text-sm mt-1" style={{ color: "var(--muted)" }}>
                 Sua agenda está livre!
@@ -275,7 +275,7 @@ export default function DashboardPage() {
           className="flex flex-col items-center justify-center gap-2 p-4 rounded-2xl font-semibold text-sm text-white transition-opacity hover:opacity-85 active:opacity-70"
           style={{ background: "var(--primary)" }}
         >
-          <span className="text-2xl">📅</span>
+          <span className="text-xl">📅</span>
           Novo Agendamento
         </Link>
         <Link
@@ -283,7 +283,7 @@ export default function DashboardPage() {
           className="flex flex-col items-center justify-center gap-2 p-4 rounded-2xl font-semibold text-sm transition-opacity hover:opacity-85 active:opacity-70"
           style={{ background: "var(--accent)", color: "var(--primary-dark)" }}
         >
-          <span className="text-2xl">💰</span>
+          <span className="text-xl">💰</span>
           Registrar Gasto
         </Link>
       </div>

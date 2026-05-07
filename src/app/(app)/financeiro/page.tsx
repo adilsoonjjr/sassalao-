@@ -108,7 +108,7 @@ export default function FinanceiroPage() {
       ) : aba === "entradas" ? (
         financeiros.length === 0 ? (
           <div className="text-center py-12" style={{ color: "var(--muted)" }}>
-            <div className="text-4xl mb-3">💰</div>
+            <div className="text-3xl mb-3">💰</div>
             <p>Nenhuma entrada neste mês</p>
           </div>
         ) : (
@@ -129,7 +129,7 @@ export default function FinanceiroPage() {
       ) : (
         gastos.length === 0 ? (
           <div className="text-center py-12" style={{ color: "var(--muted)" }}>
-            <div className="text-4xl mb-3">🧾</div>
+            <div className="text-3xl mb-3">🧾</div>
             <p>Nenhum gasto neste mês</p>
           </div>
         ) : (

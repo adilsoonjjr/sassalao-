@@ -92,7 +92,7 @@ export default function AgendamentosPage() {
         <p className="text-center py-8" style={{ color: "var(--muted)" }}>Carregando...</p>
       ) : filtered.length === 0 ? (
         <div className="text-center py-12" style={{ color: "var(--muted)" }}>
-          <div className="text-4xl mb-3">📅</div>
+          <div className="text-3xl mb-3">📅</div>
           <p className="font-medium">Nenhum agendamento encontrado</p>
           <Link href="/agendamentos/novo" className="text-sm mt-2 block hover:underline" style={{ color: "var(--primary)" }}>
             Criar agendamento

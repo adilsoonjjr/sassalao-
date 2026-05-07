@@ -16,31 +16,46 @@ export default function ClientesPage() {
   const [editando, setEditando] = useState<Cliente | null>(null);
   const [showForm, setShowForm] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [erro, setErro] = useState("");
 
   useEffect(() => { carregar(); }, []);
 
   async function carregar() {
     const res = await fetch("/api/clientes");
-    const data = await res.json();
-    setClientes(data);
+    if (res.ok) {
+      const data = await res.json();
+      setClientes(data);
+    }
   }
 
   async function salvar(e: React.FormEvent) {
     e.preventDefault();
     setLoading(true);
+    setErro("");
     const tel = form.telefone.replace(/\D/g, "");
     const body = { ...form, telefone: tel };
 
-    if (editando) {
-      await fetch(`/api/clientes/${editando.id}`, { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
-    } else {
-      await fetch("/api/clientes", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
+    try {
+      const res = editando
+        ? await fetch(`/api/clientes/${editando.id}`, { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) })
+        : await fetch("/api/clientes", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
+
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        setErro(data.error || "Erro ao salvar. Tente novamente.");
+        setLoading(false);
+        return;
+      }
+
+      setForm({ nome: "", telefone: "", email: "", observacoes: "" });
+      setEditando(null);
+      setShowForm(false);
+      await carregar();
+    } catch {
+      setErro("Erro de conexão. Verifique sua internet e tente novamente.");
+    } finally {
+      setLoading(false);
     }
-    setForm({ nome: "", telefone: "", email: "", observacoes: "" });
-    setEditando(null);
-    setShowForm(false);
-    setLoading(false);
-    carregar();
   }
 
   async function excluir(id: string) {
@@ -96,6 +111,11 @@ export default function ClientesPage() {
         <div className="rounded-2xl p-5 shadow-sm" style={{ background: "var(--card)", border: "1px solid var(--border)" }}>
           <h2 className="font-semibold mb-4">{editando ? "Editar cliente" : "Novo cliente"}</h2>
           <form onSubmit={salvar} className="space-y-3">
+            {erro && (
+              <p className="text-sm font-medium px-3 py-2 rounded-lg" style={{ background: "#fee2e2", color: "var(--danger)" }}>
+                {erro}
+              </p>
+            )}
             <input
               placeholder="Nome completo *"
               value={form.nome}

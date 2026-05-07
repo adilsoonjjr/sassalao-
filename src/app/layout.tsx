@@ -12,7 +12,9 @@ export const metadata: Metadata = {
     title: "Sassalão",
   },
   icons: {
-    apple: "/icons/icon-192.png",
+    apple: [
+      { url: "/icons/icon-192.png", sizes: "192x192", type: "image/png" },
+    ],
   },
 };
 

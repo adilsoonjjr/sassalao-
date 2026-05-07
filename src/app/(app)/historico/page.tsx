@@ -96,7 +96,7 @@ export default function HistoricoPage() {
         <p className="text-center py-8" style={{ color: "var(--muted)" }}>Carregando...</p>
       ) : filtered.length === 0 ? (
         <div className="text-center py-12" style={{ color: "var(--muted)" }}>
-          <div className="text-4xl mb-3">🗂️</div>
+          <div className="text-3xl mb-3">🗂️</div>
           <p>Nenhum registro encontrado</p>
         </div>
       ) : (
