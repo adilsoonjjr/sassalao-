@@ -1,44 +1,23 @@
 import { PrismaClient } from "@prisma/client";
+import { PrismaNeonHttp } from "@prisma/adapter-neon";
 
 declare global {
   // eslint-disable-next-line no-var
   var __prisma: PrismaClient | undefined;
 }
 
-function createPrismaClient(): PrismaClient {
-  const url = process.env.DATABASE_URL ?? "";
+function makePrisma(): PrismaClient {
+  const connectionString = process.env.DATABASE_URL ?? "";
 
-  // PostgreSQL via Neon HTTP (produção Vercel)
-  if (url.startsWith("postgresql://") || url.startsWith("postgres://")) {
-    const { PrismaNeonHttp } = require("@prisma/adapter-neon");
-    const adapter = new PrismaNeonHttp(url);
+  // Neon HTTP adapter for Vercel serverless (no WebSocket needed)
+  if (connectionString.startsWith("postgresql://") || connectionString.startsWith("postgres://")) {
+    const adapter = new PrismaNeonHttp(connectionString);
     return new PrismaClient({ adapter } as never);
   }
 
-  // SQLite (desenvolvimento local)
-  if (url.startsWith("file:")) {
-    const Database = require("better-sqlite3");
-    const { PrismaLibSQL } = require("@prisma/adapter-better-sqlite3");
-    const db = new Database(url.replace("file:", ""));
-    const adapter = new PrismaLibSQL(db);
-    return new PrismaClient({ adapter } as never);
-  }
-
-  return new PrismaClient();
+  // Fallback for local dev (should also use postgresql:// in .env)
+  return new PrismaClient({ datasourceUrl: connectionString } as never);
 }
 
-let _client: PrismaClient | undefined;
-
-function getClient(): PrismaClient {
-  if (!_client) {
-    _client = global.__prisma ?? createPrismaClient();
-    if (process.env.NODE_ENV !== "production") global.__prisma = _client;
-  }
-  return _client;
-}
-
-export const prisma = new Proxy({} as PrismaClient, {
-  get(_, prop: string) {
-    return (getClient() as never)[prop];
-  },
-});
+export const prisma: PrismaClient = global.__prisma ?? makePrisma();
+if (process.env.NODE_ENV !== "production") global.__prisma = prisma;
