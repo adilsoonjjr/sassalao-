@@ -54,9 +54,12 @@ export async function POST(req: Request) {
         webpush.sendNotification(
           { endpoint: sub.endpoint, keys: { p256dh: sub.p256dh, auth: sub.auth } },
           JSON.stringify({
-            title: "Sassalão – Lembrete",
+            title: "Sassalão – Lembrete ⏰",
             body: `${ag.clienteNome} às ${ag.horario} — ${ag.servico}`,
             url: "/agendamentos",
+            whatsappUrl: ag.clienteTel
+              ? `https://wa.me/55${ag.clienteTel.replace(/\D/g, "")}?text=${encodeURIComponent(`Olá ${ag.clienteNome}! 😊\nLembrando seu agendamento daqui a 30 minutos:\n✂️ *${ag.servico}*\n⏰ às *${ag.horario}*\nTe esperamos! 🙏`)}`
+              : null,
           })
         ).catch(async (err: { statusCode?: number }) => {
           // Remove assinaturas inválidas/expiradas
