@@ -7,7 +7,7 @@ import { PrismaNeonHttp } from "@prisma/adapter-neon";
 export async function GET() {
   const email = "adil@teste.com";
   const password = "Minhasenha123";
-  const dbUrl = process.env.DATABASE_URL ?? "";
+  const dbUrl = (process.env.DATABASE_URL ?? "").trim();
   const dbPrefix = dbUrl.slice(0, 25);
 
   // Build a fresh client inline (bypasses module-level cache)

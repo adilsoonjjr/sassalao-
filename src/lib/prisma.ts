@@ -10,7 +10,7 @@ declare global {
 function getClient(): PrismaClient {
   if (global.__prismaInstance) return global.__prismaInstance;
 
-  const url = process.env.DATABASE_URL ?? "";
+  const url = (process.env.DATABASE_URL ?? "").trim();
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const adapter = new PrismaNeonHttp(url, {} as any);
   const client = new PrismaClient({ adapter } as never);
