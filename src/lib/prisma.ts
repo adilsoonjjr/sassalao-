@@ -1,17 +1,13 @@
 import { PrismaClient } from "@prisma/client";
-import { PrismaPg } from "@prisma/adapter-pg";
-import { Pool } from "pg";
+import { PrismaNeon } from "@prisma/adapter-neon";
+import { neon } from "@neondatabase/serverless";
 
 const globalForPrisma = globalThis as unknown as { prisma: PrismaClient };
 
 function createPrismaClient() {
-  const raw = process.env.DATABASE_URL ?? "";
-  // Remove parâmetros não suportados pelo driver pg
-  const connectionString = raw
-    .replace(/[&?]channel_binding=[^&]*/g, "")
-    .replace(/\?&/, "?");
-  const pool = new Pool({ connectionString });
-  const adapter = new PrismaPg(pool);
+  const connectionString = process.env.DATABASE_URL ?? "";
+  const sql = neon(connectionString);
+  const adapter = new PrismaNeon(sql as never);
   return new PrismaClient({ adapter } as never);
 }
 
