@@ -2,12 +2,6 @@ import { NextResponse } from "next/server";
 import webpush from "web-push";
 import { prisma } from "@/lib/prisma";
 
-webpush.setVapidDetails(
-  process.env.VAPID_EMAIL!,
-  process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY!,
-  process.env.VAPID_PRIVATE_KEY!,
-);
-
 // Protege o endpoint de cron com segredo
 function isAuthorized(req: Request) {
   const secret = req.headers.get("x-cron-secret");
@@ -18,6 +12,12 @@ export async function POST(req: Request) {
   if (!isAuthorized(req)) {
     return NextResponse.json({ error: "Não autorizado" }, { status: 401 });
   }
+
+  webpush.setVapidDetails(
+    process.env.VAPID_EMAIL!,
+    process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY!,
+    process.env.VAPID_PRIVATE_KEY!,
+  );
 
   // Horário atual no Brasil (UTC-3)
   const nowUTC = Date.now();
