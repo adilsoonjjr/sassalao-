@@ -8,13 +8,14 @@ declare global {
 function createPrismaClient(): PrismaClient {
   const url = process.env.DATABASE_URL ?? "";
 
+  // PostgreSQL via Neon HTTP (produção Vercel)
   if (url.startsWith("postgresql://") || url.startsWith("postgres://")) {
-    const { neon } = require("@neondatabase/serverless");
-    const { PrismaNeon } = require("@prisma/adapter-neon");
-    const adapter = new PrismaNeon(neon(url));
+    const { PrismaNeonHttp } = require("@prisma/adapter-neon");
+    const adapter = new PrismaNeonHttp(url);
     return new PrismaClient({ adapter } as never);
   }
 
+  // SQLite (desenvolvimento local)
   if (url.startsWith("file:")) {
     const Database = require("better-sqlite3");
     const { PrismaLibSQL } = require("@prisma/adapter-better-sqlite3");
@@ -23,11 +24,9 @@ function createPrismaClient(): PrismaClient {
     return new PrismaClient({ adapter } as never);
   }
 
-  // Build time sem URL válida — cliente inerte (não conecta)
   return new PrismaClient();
 }
 
-// Lazy singleton — só instancia na primeira query, não no import
 let _client: PrismaClient | undefined;
 
 function getClient(): PrismaClient {
