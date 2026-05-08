@@ -19,10 +19,11 @@ model User {
   createdAt    DateTime      @default(now())
   updatedAt    DateTime      @updatedAt
 
-  agendamentos Agendamento[]
-  financeiros  Financeiro[]
-  gastos       Gasto[]
-  clientes     Cliente[]
+  agendamentos      Agendamento[]
+  financeiros       Financeiro[]
+  gastos            Gasto[]
+  clientes          Cliente[]
+  pushSubscriptions PushSubscription[]
 }
 
 model Cliente {
@@ -81,6 +82,17 @@ model Gasto {
   descricao String
   valor     Float
   data      DateTime @default(now())
+  createdAt DateTime @default(now())
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model PushSubscription {
+  id        String   @id @default(cuid())
+  userId    String
+  endpoint  String   @unique
+  p256dh    String
+  auth      String
   createdAt DateTime @default(now())
 
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
