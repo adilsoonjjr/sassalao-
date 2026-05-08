@@ -33,7 +33,11 @@
       "Bash(npx next *)",
       "Bash(DATABASE_URL=\"postgresql://neondb_owner:npg_tp9MFuXzVeq6@ep-royal-river-acw80kdt.sa-east-1.aws.neon.tech/neondb?sslmode=require\" npx prisma migrate deploy)",
       "Bash(DATABASE_URL=\"postgresql://neondb_owner:npg_tp9MFuXzVeq6@ep-royal-river-acw80kdt.sa-east-1.aws.neon.tech/neondb?sslmode=require\" npx prisma db push)",
-      "Bash(node scripts/generate-icons.mjs)"
+      "Bash(node scripts/generate-icons.mjs)",
+      "Bash(Get-ChildItem -Recurse -Directory)",
+      "Bash(Select-Object -First 30 FullName)",
+      "Bash(node -e \"const webpush = require\\('web-push'\\); const keys = webpush.generateVAPIDKeys\\(\\); console.log\\('PUBLIC:', keys.publicKey\\); console.log\\('PRIVATE:', keys.privateKey\\);\")",
+      "Bash(ls \"C:\\\\Users\\\\adils\\\\OneDrive\\\\Área de Trabalho\\\\sassalao\\\\\")"
     ]
   }
 }
