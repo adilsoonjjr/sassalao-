@@ -37,7 +37,9 @@
       "Bash(Get-ChildItem -Recurse -Directory)",
       "Bash(Select-Object -First 30 FullName)",
       "Bash(node -e \"const webpush = require\\('web-push'\\); const keys = webpush.generateVAPIDKeys\\(\\); console.log\\('PUBLIC:', keys.publicKey\\); console.log\\('PRIVATE:', keys.privateKey\\);\")",
-      "Bash(ls \"C:\\\\Users\\\\adils\\\\OneDrive\\\\Área de Trabalho\\\\sassalao\\\\\")"
+      "Bash(ls \"C:\\\\Users\\\\adils\\\\OneDrive\\\\Área de Trabalho\\\\sassalao\\\\\")",
+      "Bash(curl -s -X POST https://sassalao.vercel.app/api/auth/register -H \"Content-Type: application/json\" -d \"{\\\\\"name\\\\\":\\\\\"Adil Teste\\\\\",\\\\\"email\\\\\":\\\\\"adil@teste.com\\\\\",\\\\\"password\\\\\":\\\\\"Minhasenha123\\\\\"}\")",
+      "Bash(curl -sv -X POST https://sassalao.vercel.app/api/auth/register -H \"Content-Type: application/json\" -d \"{\\\\\"name\\\\\":\\\\\"Adil Teste\\\\\",\\\\\"email\\\\\":\\\\\"adil@teste.com\\\\\",\\\\\"password\\\\\":\\\\\"Minhasenha123\\\\\"}\")"
     ]
   }
 }
