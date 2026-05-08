@@ -11,7 +11,8 @@ function makePrisma(): PrismaClient {
 
   // Neon HTTP adapter for Vercel serverless (no WebSocket needed)
   if (connectionString.startsWith("postgresql://") || connectionString.startsWith("postgres://")) {
-    const adapter = new PrismaNeonHttp(connectionString);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const adapter = new PrismaNeonHttp(connectionString, {} as any);
     return new PrismaClient({ adapter } as never);
   }
 

@@ -13,7 +13,8 @@ export async function GET() {
   // Build a fresh client inline (bypasses module-level cache)
   let db: PrismaClient;
   try {
-    const adapter = new PrismaNeonHttp(dbUrl);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const adapter = new PrismaNeonHttp(dbUrl, {} as any);
     db = new PrismaClient({ adapter } as never);
   } catch (err) {
     return NextResponse.json({ ok: false, step: "construct", error: String(err), dbPrefix }, { status: 500 });
