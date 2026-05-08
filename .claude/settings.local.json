@@ -33,7 +33,12 @@
       "Bash(npx next *)",
       "Bash(DATABASE_URL=\"postgresql://neondb_owner:npg_tp9MFuXzVeq6@ep-royal-river-acw80kdt.sa-east-1.aws.neon.tech/neondb?sslmode=require\" npx prisma migrate deploy)",
       "Bash(DATABASE_URL=\"postgresql://neondb_owner:npg_tp9MFuXzVeq6@ep-royal-river-acw80kdt.sa-east-1.aws.neon.tech/neondb?sslmode=require\" npx prisma db push)",
-      "Bash(node scripts/generate-icons.mjs)"
+      "Bash(node scripts/generate-icons.mjs)",
+      "Bash(npx cap *)",
+      "Bash(.\\\\gradlew.bat assembleDebug)",
+      "Bash(java -version)",
+      "PowerShell($env:JAVA_HOME = \"C:\\\\Program Files\\\\Java\\\\jdk-17.0.12\"; cd \"C:\\\\Users\\\\adils\\\\OneDrive\\\\Área de Trabalho\\\\sassalao\\\\android\"; .\\\\gradlew.bat assembleDebug 2>&1 | Select-Object -Last 30)",
+      "Bash(curl -s -X POST https://pwabuilder-cloudapk.azurewebsites.net/generateSignedAPK -H 'Content-Type: application/json' -d '{ *)"
     ]
   }
 }
