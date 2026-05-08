@@ -15,6 +15,7 @@ const PUBLIC_PATHS = [
   "/sw.js",
   "/icons",
   "/logo.svg",
+  "/api/admin/seed",
 ];
 
 export default auth((req) => {
