@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 
 interface FormData {
@@ -10,6 +10,12 @@ interface FormData {
   data: string;
   horario: string;
   observacoes: string;
+}
+
+interface Cliente {
+  id: string;
+  nome: string;
+  telefone: string;
 }
 
 interface Props {
@@ -44,6 +50,33 @@ export default function AgendamentoForm({ initialData, agendamentoId, title }: P
   const [error, setError] = useState("");
   const [criado, setCriado] = useState<FormData | null>(null);
 
+  // Client autocomplete state
+  const [clientes, setClientes] = useState<Cliente[]>([]);
+  const [suggestions, setSuggestions] = useState<Cliente[]>([]);
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const nomeRef = useRef<HTMLInputElement>(null);
+  const suggestionsRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    fetch("/api/clientes")
+      .then((r) => r.ok ? r.json() : [])
+      .then((data) => setClientes(Array.isArray(data) ? data : []))
+      .catch(() => {});
+  }, []);
+
+  useEffect(() => {
+    function handleClick(e: MouseEvent) {
+      if (
+        !nomeRef.current?.contains(e.target as Node) &&
+        !suggestionsRef.current?.contains(e.target as Node)
+      ) {
+        setShowSuggestions(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClick);
+    return () => document.removeEventListener("mousedown", handleClick);
+  }, []);
+
   const todosPreenchidos =
     form.clienteNome.trim() &&
     form.servico.trim() &&
@@ -51,8 +84,40 @@ export default function AgendamentoForm({ initialData, agendamentoId, title }: P
     form.data &&
     form.horario;
 
+  function onNomeChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const val = e.target.value;
+    setForm((f) => ({ ...f, clienteNome: val }));
+    if (val.trim().length >= 1) {
+      const filtered = clientes.filter((c) =>
+        c.nome.toLowerCase().includes(val.toLowerCase())
+      );
+      setSuggestions(filtered);
+      setShowSuggestions(filtered.length > 0);
+    } else {
+      setShowSuggestions(false);
+    }
+  }
+
+  function selectCliente(c: Cliente) {
+    setForm((f) => ({ ...f, clienteNome: c.nome, clienteTel: c.telefone }));
+    setShowSuggestions(false);
+  }
+
   function onChange(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) {
     setForm((f) => ({ ...f, [e.target.name]: e.target.value }));
+  }
+
+  async function saveClienteIfNew(nome: string, telefone: string) {
+    if (!telefone) return;
+    const exists = clientes.find(
+      (c) => c.nome.toLowerCase() === nome.toLowerCase() && c.telefone === telefone
+    );
+    if (exists) return;
+    await fetch("/api/clientes", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ nome, telefone }),
+    }).catch(() => {});
   }
 
   async function handleSubmit(e: React.FormEvent) {
@@ -76,14 +141,16 @@ export default function AgendamentoForm({ initialData, agendamentoId, title }: P
       return;
     }
 
-    // Se é edição, volta direto
+    if (!agendamentoId) {
+      await saveClienteIfNew(form.clienteNome.trim(), form.clienteTel);
+    }
+
     if (agendamentoId) {
       router.push("/agendamentos");
       router.refresh();
       return;
     }
 
-    // Se é novo e tem telefone, mostra confirmação com WhatsApp
     if (form.clienteTel) {
       setCriado(form);
     } else {
@@ -101,7 +168,6 @@ export default function AgendamentoForm({ initialData, agendamentoId, title }: P
   const labelClass = "block text-sm font-medium mb-1";
   const labelStyle = { color: "var(--muted)" };
 
-  // Tela de confirmação pós-cadastro
   if (criado) {
     return (
       <div className="max-w-sm mx-auto space-y-5">
@@ -161,9 +227,42 @@ export default function AgendamentoForm({ initialData, agendamentoId, title }: P
         )}
 
         <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
+          <div className="relative">
             <label className={labelClass} style={labelStyle}>Nome do cliente *</label>
-            <input name="clienteNome" value={form.clienteNome} onChange={onChange} placeholder="Nome completo" required className={inputClass} style={inputStyle} />
+            <input
+              ref={nomeRef}
+              name="clienteNome"
+              value={form.clienteNome}
+              onChange={onNomeChange}
+              onFocus={() => {
+                if (form.clienteNome.trim() && suggestions.length > 0) setShowSuggestions(true);
+              }}
+              placeholder="Nome completo"
+              required
+              autoComplete="off"
+              className={inputClass}
+              style={inputStyle}
+            />
+            {showSuggestions && (
+              <div
+                ref={suggestionsRef}
+                className="absolute z-20 left-0 right-0 mt-1 rounded-xl overflow-hidden shadow-lg"
+                style={{ background: "var(--card)", border: "1px solid var(--border)" }}
+              >
+                {suggestions.map((c) => (
+                  <button
+                    key={c.id}
+                    type="button"
+                    onMouseDown={() => selectCliente(c)}
+                    className="w-full px-4 py-2.5 text-left text-sm flex items-center justify-between hover:opacity-80 transition-opacity"
+                    style={{ borderBottom: "1px solid var(--border)" }}
+                  >
+                    <span className="font-medium">{c.nome}</span>
+                    <span className="text-xs" style={{ color: "var(--muted)" }}>{c.telefone}</span>
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
 
           <div>
@@ -209,7 +308,6 @@ export default function AgendamentoForm({ initialData, agendamentoId, title }: P
             <textarea name="observacoes" value={form.observacoes} onChange={onChange} placeholder="Anotações sobre o atendimento..." rows={3} className={`${inputClass} resize-none`} style={inputStyle} />
           </div>
 
-          {/* Indicador de WhatsApp quando tudo preenchido */}
           {todosPreenchidos && form.clienteTel && !agendamentoId && (
             <div
               className="flex items-center gap-2 p-3 rounded-xl text-sm"
