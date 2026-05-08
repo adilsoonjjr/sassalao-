@@ -40,8 +40,11 @@ self.addEventListener("fetch", (e) => {
 
 // ── Push server-side (VAPID) ──────────────────────────────────────────────────
 self.addEventListener("push", (e) => {
-  let data = { title: "Sassalão", body: "Lembrete de agendamento", url: "/agendamentos" };
+  let data = { title: "Sassalão", body: "Lembrete de agendamento", url: "/agendamentos", whatsappUrl: null };
   try { data = { ...data, ...e.data.json() }; } catch {}
+
+  const actions = [{ action: "agenda", title: "Ver agenda" }];
+  if (data.whatsappUrl) actions.push({ action: "whatsapp", title: "Enviar WhatsApp" });
 
   e.waitUntil(
     self.registration.showNotification(data.title, {
@@ -50,7 +53,8 @@ self.addEventListener("push", (e) => {
       badge: "/icons/icon-192.png",
       tag: "sassalao-lembrete",
       renotify: true,
-      data: { url: data.url },
+      actions,
+      data: { url: data.url, whatsappUrl: data.whatsappUrl },
     })
   );
 });
@@ -92,13 +96,20 @@ self.addEventListener("message", (e) => {
 // ── Clique na notificação ─────────────────────────────────────────────────────
 self.addEventListener("notificationclick", (e) => {
   e.notification.close();
-  const url = e.notification.data?.url || "/dashboard";
+  const { url, whatsappUrl } = e.notification.data || {};
+  const target = (e.action === "whatsapp" && whatsappUrl) ? whatsappUrl : (url || "/agendamentos");
+
   e.waitUntil(
     clients.matchAll({ type: "window" }).then((cs) => {
-      for (const c of cs) {
-        if (c.url.includes(self.location.origin)) { c.focus(); c.navigate(url); return; }
+      // WhatsApp abre externamente — sempre openWindow
+      if (target.startsWith("https://wa.me")) {
+        clients.openWindow(target);
+        return;
       }
-      clients.openWindow(url);
+      for (const c of cs) {
+        if (c.url.includes(self.location.origin)) { c.focus(); c.navigate(target); return; }
+      }
+      clients.openWindow(target);
     })
   );
 });
