@@ -37,6 +37,26 @@ export default function DashboardPage() {
   const router = useRouter();
   const [data, setData] = useState<DashboardData | null>(null);
   const [loading, setLoading] = useState(true);
+  const [notifStatus, setNotifStatus] = useState<"unknown" | "granted" | "denied" | "default">("unknown");
+
+  useEffect(() => {
+    if ("Notification" in window) setNotifStatus(Notification.permission as "granted" | "denied" | "default");
+  }, []);
+
+  async function ativarNotificacoes() {
+    const perm = await Notification.requestPermission();
+    setNotifStatus(perm as "granted" | "denied" | "default");
+    if (perm === "granted") {
+      const reg = await navigator.serviceWorker.getRegistration();
+      if (reg) {
+        const res = await fetch("/api/push/test", { method: "POST" });
+        if (res.status === 404) {
+          // ainda não inscrito, recarrega para o SW inscrever
+          window.location.reload();
+        }
+      }
+    }
+  }
 
   async function load() {
     const res = await fetch("/api/dashboard");
@@ -89,6 +109,34 @@ export default function DashboardPage() {
           + Agendar
         </Link>
       </div>
+
+      {/* Banner de ativação de notificações */}
+      {notifStatus !== "granted" && notifStatus !== "unknown" && (
+        <button
+          onClick={ativarNotificacoes}
+          className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold text-left transition-opacity hover:opacity-85 active:opacity-70"
+          style={{ background: notifStatus === "denied" ? "#fee2e2" : "#fef3c7", color: notifStatus === "denied" ? "var(--danger)" : "#92400e" }}
+        >
+          <span className="text-xl">🔔</span>
+          <div>
+            <p className="font-semibold">{notifStatus === "denied" ? "Notificações bloqueadas" : "Ativar notificações"}</p>
+            <p className="text-xs font-normal opacity-80">
+              {notifStatus === "denied"
+                ? "Vá em Configurações do Chrome → Notificações → permitir sassalao.vercel.app"
+                : "Toque aqui para receber lembretes 30 min antes dos agendamentos"}
+            </p>
+          </div>
+        </button>
+      )}
+      {notifStatus === "granted" && (
+        <div
+          className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm"
+          style={{ background: "#dcfce7", color: "#166534" }}
+        >
+          <span className="text-xl">🔔</span>
+          <p className="font-semibold">Notificações ativas — você será avisado 30 min antes</p>
+        </div>
+      )}
 
       {/* KPIs rápidos do dia */}
       <div className="grid grid-cols-3 gap-3">
