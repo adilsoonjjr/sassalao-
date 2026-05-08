@@ -3,22 +3,24 @@ import { PrismaNeonHttp } from "@prisma/adapter-neon";
 
 declare global {
   // eslint-disable-next-line no-var
-  var __prisma: PrismaClient | undefined;
+  var __prismaInstance: PrismaClient | undefined;
 }
 
-function makePrisma(): PrismaClient {
-  const connectionString = process.env.DATABASE_URL ?? "";
+// Lazy — never called at module evaluation (build-time safe)
+function getClient(): PrismaClient {
+  if (global.__prismaInstance) return global.__prismaInstance;
 
-  // Neon HTTP adapter for Vercel serverless (no WebSocket needed)
-  if (connectionString.startsWith("postgresql://") || connectionString.startsWith("postgres://")) {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const adapter = new PrismaNeonHttp(connectionString, {} as any);
-    return new PrismaClient({ adapter } as never);
-  }
+  const url = process.env.DATABASE_URL ?? "";
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const adapter = new PrismaNeonHttp(url, {} as any);
+  const client = new PrismaClient({ adapter } as never);
 
-  // Fallback for local dev (should also use postgresql:// in .env)
-  return new PrismaClient({ datasourceUrl: connectionString } as never);
+  if (process.env.NODE_ENV !== "production") global.__prismaInstance = client;
+  return client;
 }
 
-export const prisma: PrismaClient = global.__prisma ?? makePrisma();
-if (process.env.NODE_ENV !== "production") global.__prisma = prisma;
+// Proxy defers getClient() until first property access (request time, not build time)
+export const prisma = new Proxy({} as PrismaClient, {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  get(_, prop: string) { return (getClient() as any)[prop]; },
+});
