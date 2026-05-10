@@ -1,4 +1,4 @@
-const CACHE = "sassalao-v2";
+const CACHE = "sassalao-v3";
 
 const STATIC = [
   "/",

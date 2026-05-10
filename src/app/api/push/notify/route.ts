@@ -2,10 +2,10 @@ import { NextResponse } from "next/server";
 import webpush from "web-push";
 import { prisma } from "@/lib/prisma";
 
-// Protege o endpoint de cron com segredo
+// Protege o endpoint de cron com segredo (Vercel envia Authorization: Bearer <CRON_SECRET>)
 function isAuthorized(req: Request) {
-  const secret = req.headers.get("x-cron-secret");
-  return secret === process.env.CRON_SECRET;
+  const auth = req.headers.get("authorization");
+  return auth === `Bearer ${process.env.CRON_SECRET}`;
 }
 
 export async function POST(req: Request) {

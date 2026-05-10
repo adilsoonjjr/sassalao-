@@ -1,5 +1,5 @@
 "use client";
-import { useState, use } from "react";
+import { useState, use, useEffect } from "react";
 import { useRouter } from "next/navigation";
 
 const FORMAS = [
@@ -10,12 +10,37 @@ const FORMAS = [
   { value: "transferencia", label: "🏦 Transferência" },
 ];
 
+interface Agendamento {
+  id: string;
+  clienteNome: string;
+  servico: string;
+  valor: number;
+  horario: string;
+}
+
 export default function ConcluirPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
   const router = useRouter();
+
+  const [ag, setAg] = useState<Agendamento | null>(null);
+  const [servico, setServico] = useState("");
+  const [valor, setValor] = useState("");
   const [formaPagamento, setFormaPagamento] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+
+  useEffect(() => {
+    fetch("/api/agendamentos")
+      .then((r) => r.json())
+      .then((list: Agendamento[]) => {
+        const found = list.find((a) => a.id === id);
+        if (found) {
+          setAg(found);
+          setServico(found.servico);
+          setValor(String(found.valor));
+        }
+      });
+  }, [id]);
 
   async function handleConcluir() {
     setLoading(true);
@@ -24,7 +49,7 @@ export default function ConcluirPage({ params }: { params: Promise<{ id: string 
     const res = await fetch(`/api/agendamentos/${id}/concluir`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ formaPagamento }),
+      body: JSON.stringify({ formaPagamento, servico, valor: parseFloat(valor) }),
     });
 
     if (!res.ok) {
@@ -37,6 +62,9 @@ export default function ConcluirPage({ params }: { params: Promise<{ id: string 
     router.push("/agendamentos");
   }
 
+  const inputClass = "w-full px-4 py-3 rounded-xl text-sm";
+  const inputStyle = { border: "1.5px solid var(--border)", background: "var(--background)", outline: "none" };
+
   return (
     <div className="max-w-sm mx-auto space-y-5">
       <div className="flex items-center gap-3">
@@ -44,18 +72,55 @@ export default function ConcluirPage({ params }: { params: Promise<{ id: string 
         <h1 className="text-xl font-bold">Concluir Procedimento</h1>
       </div>
 
-      <div className="rounded-2xl p-5 shadow-sm" style={{ background: "var(--card)", border: "1px solid var(--border)" }}>
-        <p className="text-sm mb-5" style={{ color: "var(--muted)" }}>
-          Ao confirmar, o valor do procedimento será adicionado ao seu caixa.
-        </p>
+      <div className="rounded-2xl p-5 shadow-sm space-y-5" style={{ background: "var(--card)", border: "1px solid var(--border)" }}>
+        {ag && (
+          <p className="text-sm font-medium" style={{ color: "var(--muted)" }}>
+            Cliente: <span style={{ color: "var(--foreground)" }}>{ag.clienteNome}</span>
+          </p>
+        )}
 
         {error && (
-          <div className="mb-4 p-3 rounded-lg text-sm" style={{ background: "#fee", color: "var(--danger)" }}>
+          <div className="p-3 rounded-lg text-sm" style={{ background: "#fee", color: "var(--danger)" }}>
             {error}
           </div>
         )}
 
-        <div className="mb-5">
+        {/* Serviço e valor editáveis para caso o cliente altere na hora */}
+        <div className="space-y-3 pb-4" style={{ borderBottom: "1px solid var(--border)" }}>
+          <p className="text-xs font-semibold uppercase tracking-wide" style={{ color: "var(--muted)" }}>
+            Serviço realizado
+          </p>
+          <div>
+            <label className="block text-sm font-medium mb-1" style={{ color: "var(--muted)" }}>Procedimento</label>
+            <input
+              value={servico}
+              onChange={(e) => setServico(e.target.value)}
+              placeholder="Ex: Corte + escova"
+              className={inputClass}
+              style={inputStyle}
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium mb-1" style={{ color: "var(--muted)" }}>Valor cobrado (R$)</label>
+            <input
+              type="number"
+              step="0.01"
+              min="0"
+              value={valor}
+              onChange={(e) => setValor(e.target.value)}
+              placeholder="0,00"
+              className={inputClass}
+              style={inputStyle}
+            />
+          </div>
+          {ag && (servico !== ag.servico || valor !== String(ag.valor)) && (
+            <p className="text-xs px-3 py-2 rounded-lg" style={{ background: "var(--accent)", color: "var(--primary-dark)" }}>
+              ✏️ Alterado em relação ao agendamento original ({ag.servico} · R$ {ag.valor})
+            </p>
+          )}
+        </div>
+
+        <div>
           <label className="block text-sm font-medium mb-3" style={{ color: "var(--muted)" }}>
             Forma de pagamento
           </label>
@@ -87,9 +152,9 @@ export default function ConcluirPage({ params }: { params: Promise<{ id: string 
           </button>
           <button
             onClick={handleConcluir}
-            disabled={loading}
+            disabled={loading || !servico || !valor}
             className="flex-1 py-3 rounded-xl text-sm font-semibold text-white"
-            style={{ background: "var(--success)", opacity: loading ? 0.7 : 1 }}
+            style={{ background: "var(--success)", opacity: loading || !servico || !valor ? 0.6 : 1 }}
           >
             {loading ? "Confirmando..." : "✓ Confirmar"}
           </button>

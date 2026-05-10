@@ -8,16 +8,19 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
   const userId = session.user.id;
 
   const { id } = await params;
-  const { formaPagamento } = await req.json();
+  const { formaPagamento, servico, valor } = await req.json();
 
   const ag = await prisma.agendamento.findFirst({ where: { id, userId } });
   if (!ag) return NextResponse.json({ error: "Não encontrado" }, { status: 404 });
   if (ag.status === "concluido") return NextResponse.json({ error: "Já concluído" }, { status: 400 });
 
+  const servicoFinal = servico?.trim() || ag.servico;
+  const valorFinal = typeof valor === "number" && valor > 0 ? valor : ag.valor;
+
   const [updated] = await prisma.$transaction([
     prisma.agendamento.update({
       where: { id },
-      data: { status: "concluido" },
+      data: { status: "concluido", servico: servicoFinal, valor: valorFinal },
     }),
     prisma.financeiro.create({
       data: {
@@ -25,11 +28,11 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
         agendamentoId: id,
         tipo: "entrada",
         categoria: "procedimento",
-        descricao: ag.servico,
-        valor: ag.valor,
+        descricao: servicoFinal,
+        valor: valorFinal,
         formaPagamento: formaPagamento || null,
         clienteNome: ag.clienteNome,
-        servico: ag.servico,
+        servico: servicoFinal,
         data: new Date(),
       },
     }),
