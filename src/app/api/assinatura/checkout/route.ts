@@ -20,31 +20,36 @@ export async function POST(req: Request) {
   const valor = isAnual ? 199 : 19.9;
   const titulo = isAnual ? "Sassalão – Plano Anual" : "Sassalão – Plano Mensal";
 
-  const result = await preference.create({
-    body: {
-      items: [
-        {
-          id: plano,
-          title: titulo,
-          quantity: 1,
-          unit_price: valor,
-          currency_id: "BRL",
+  try {
+    const result = await preference.create({
+      body: {
+        items: [
+          {
+            id: plano,
+            title: titulo,
+            quantity: 1,
+            unit_price: valor,
+            currency_id: "BRL",
+          },
+        ],
+        payer: {
+          email: session.user.email ?? "",
+          name: session.user.name ?? "",
         },
-      ],
-      payer: {
-        email: session.user.email ?? "",
-        name: session.user.name ?? "",
+        external_reference: `${session.user.id}|${plano}`,
+        back_urls: {
+          success: `${process.env.NEXTAUTH_URL}/planos/sucesso`,
+          failure: `${process.env.NEXTAUTH_URL}/planos`,
+          pending: `${process.env.NEXTAUTH_URL}/planos/pendente`,
+        },
+        auto_return: "approved",
+        notification_url: `${process.env.NEXTAUTH_URL}/api/webhook/mercadopago`,
       },
-      external_reference: `${session.user.id}|${plano}`,
-      back_urls: {
-        success: `${process.env.NEXTAUTH_URL}/planos/sucesso`,
-        failure: `${process.env.NEXTAUTH_URL}/planos`,
-        pending: `${process.env.NEXTAUTH_URL}/planos/pendente`,
-      },
-      auto_return: "approved",
-      notification_url: `${process.env.NEXTAUTH_URL}/api/webhook/mercadopago`,
-    },
-  });
+    });
 
-  return NextResponse.json({ url: result.init_point });
+    return NextResponse.json({ url: result.init_point });
+  } catch (err) {
+    console.error("MercadoPago checkout error:", err);
+    return NextResponse.json({ error: "Erro ao criar preferência de pagamento" }, { status: 500 });
+  }
 }

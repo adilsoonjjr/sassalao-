@@ -22,16 +22,21 @@ export default function PlanosPage() {
 
   async function assinar(plano: "mensal" | "anual") {
     setLoading(plano);
-    const res = await fetch("/api/assinatura/checkout", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ plano }),
-    });
-    const data = await res.json();
-    if (data.url) {
-      window.location.href = data.url;
-    } else {
-      alert("Erro ao iniciar pagamento. Tente novamente.");
+    try {
+      const res = await fetch("/api/assinatura/checkout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ plano }),
+      });
+      const data = await res.json();
+      if (data.url) {
+        window.location.href = data.url;
+      } else {
+        alert(data.error || "Erro ao iniciar pagamento. Tente novamente.");
+        setLoading(null);
+      }
+    } catch {
+      alert("Erro ao iniciar pagamento. Verifique sua conexão e tente novamente.");
       setLoading(null);
     }
   }
