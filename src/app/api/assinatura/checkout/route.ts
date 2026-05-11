@@ -37,6 +37,9 @@ export async function POST(req: Request) {
           name: session.user.name ?? "",
         },
         external_reference: `${session.user.id}|${plano}`,
+        payment_methods: {
+          installments: 12,
+        },
         back_urls: {
           success: `${process.env.NEXTAUTH_URL}/planos/sucesso`,
           failure: `${process.env.NEXTAUTH_URL}/planos`,
