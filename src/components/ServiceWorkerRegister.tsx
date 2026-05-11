@@ -39,33 +39,55 @@ async function scheduleLocalNotifications(sw: ServiceWorker) {
   }
 }
 
+async function waitForActiveWorker(reg: ServiceWorkerRegistration): Promise<ServiceWorker> {
+  if (reg.active) return reg.active;
+  return new Promise((resolve) => {
+    const sw = reg.installing ?? reg.waiting;
+    if (!sw) { resolve(reg.active!); return; }
+    sw.addEventListener("statechange", function handler() {
+      if (sw.state === "activated") {
+        sw.removeEventListener("statechange", handler);
+        resolve(sw);
+      }
+    });
+  });
+}
+
 export default function ServiceWorkerRegister() {
   useEffect(() => {
     if (!("serviceWorker" in navigator)) return;
 
+    let interval: ReturnType<typeof setInterval> | null = null;
+
     navigator.serviceWorker.register("/sw.js").then(async (reg) => {
-      // Pede permissão de notificação
       if (Notification.permission === "default") {
         await Notification.requestPermission();
       }
 
       if (Notification.permission === "granted") {
-        // Push server-side (app fechado)
         await subscribeToPush(reg);
 
-        // Fallback local (app aberto)
-        const sw = reg.active || reg.installing || reg.waiting;
-        if (sw) scheduleLocalNotifications(sw);
+        const sw = await waitForActiveWorker(reg);
+        scheduleLocalNotifications(sw);
       }
 
-      // Re-agenda fallback local a cada hora
-      const interval = setInterval(async () => {
+      // Re-agenda a cada 5 min e quando app volta ao foco
+      const reSchedule = async () => {
         const r = await navigator.serviceWorker.getRegistration();
-        if (r?.active) scheduleLocalNotifications(r.active);
-      }, 60 * 60 * 1000);
+        if (r?.active && Notification.permission === "granted") {
+          scheduleLocalNotifications(r.active);
+        }
+      };
 
-      return () => clearInterval(interval);
+      interval = setInterval(reSchedule, 5 * 60 * 1000);
+      document.addEventListener("visibilitychange", () => {
+        if (document.visibilityState === "visible") reSchedule();
+      });
     }).catch(() => {});
+
+    return () => {
+      if (interval) clearInterval(interval);
+    };
   }, []);
 
   return null;

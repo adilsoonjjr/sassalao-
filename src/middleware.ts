@@ -16,6 +16,7 @@ const PUBLIC_PATHS = [
   "/icons",
   "/logo.svg",
   "/api/admin/seed",
+  "/api/push/notify",
 ];
 
 export default auth((req) => {
