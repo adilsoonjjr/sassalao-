@@ -65,7 +65,7 @@ export default function CadastroPage() {
     <div className="min-h-screen flex items-center justify-center px-4 py-8" style={{ background: "var(--background)" }}>
       <div className="w-full max-w-sm">
         <div className="text-center mb-6">
-          <div className="text-4xl mb-2">📅</div>
+          <img src="/logo.svg" alt="Beleza em Dia" className="w-16 h-16 mx-auto mb-2" />
           <h1 className="text-2xl font-bold" style={{ color: "var(--primary-dark)" }}>Beleza em Dia</h1>
           <p className="text-sm mt-1" style={{ color: "var(--muted)" }}>7 dias grátis, sem cartão</p>
         </div>

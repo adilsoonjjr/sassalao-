@@ -22,7 +22,7 @@ export default function LandingPage() {
       {/* Nav */}
       <nav className="flex items-center justify-between px-6 py-4 max-w-5xl mx-auto">
         <div className="flex items-center gap-2">
-          <span className="text-2xl">📅</span>
+          <img src="/logo.svg" alt="Beleza em Dia" className="w-8 h-8" />
           <span className="font-bold text-lg" style={{ color: "var(--primary-dark)" }}>Beleza em Dia</span>
         </div>
         <div className="flex items-center gap-3">
@@ -200,7 +200,7 @@ export default function LandingPage() {
       {/* Footer */}
       <footer className="text-center py-8 text-sm" style={{ color: "var(--muted)" }}>
         <div className="flex items-center justify-center gap-2 mb-2">
-          <span>📅</span>
+          <img src="/logo.svg" alt="Beleza em Dia" className="w-6 h-6" />
           <span className="font-bold" style={{ color: "var(--primary-dark)" }}>Beleza em Dia</span>
         </div>
         <p>© {new Date().getFullYear()} Beleza em Dia · Agenda e financeiro para profissionais de beleza</p>

@@ -26,7 +26,7 @@ export default function RecuperarSenhaPage() {
     <div className="min-h-screen flex items-center justify-center px-4" style={{ background: "var(--background)" }}>
       <div className="w-full max-w-sm">
         <div className="text-center mb-8">
-          <div className="text-4xl mb-2">📅</div>
+          <img src="/logo.svg" alt="Beleza em Dia" className="w-16 h-16 mx-auto mb-2" />
           <h1 className="text-2xl font-bold" style={{ color: "var(--primary-dark)" }}>Beleza em Dia</h1>
         </div>
 

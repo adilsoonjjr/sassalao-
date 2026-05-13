@@ -44,7 +44,7 @@ export default function PlanosPage() {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center px-4 py-12" style={{ background: "var(--background)" }}>
       <div className="text-center mb-8">
-        <span className="text-4xl">📅</span>
+        <img src="/logo.svg" alt="Beleza em Dia" className="w-16 h-16 mx-auto" />
         <h1 className="text-2xl font-bold mt-2" style={{ color: "var(--primary-dark)" }}>Beleza em Dia</h1>
 
         {status?.status === "expired" && (
