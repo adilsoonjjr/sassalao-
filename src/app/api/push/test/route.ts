@@ -25,7 +25,7 @@ export async function POST() {
       webpush.sendNotification(
         { endpoint: sub.endpoint, keys: { p256dh: sub.p256dh, auth: sub.auth } },
         JSON.stringify({
-          title: "Sassalão – Teste ✅",
+          title: "Beleza em Dia – Teste ✅",
           body: "Notificações funcionando! Você receberá lembretes 30 min antes.",
           url: "/agendamentos",
           whatsappUrl: null,

@@ -37,9 +37,9 @@ function LoginForm() {
     <div className="min-h-screen flex items-center justify-center px-4" style={{ background: "var(--background)" }}>
       <div className="w-full max-w-sm">
         <div className="text-center mb-8">
-          <div className="text-4xl mb-2">✂️</div>
-          <h1 className="text-2xl font-bold" style={{ color: "var(--primary-dark)" }}>Sassalão</h1>
-          <p className="text-sm mt-1" style={{ color: "var(--muted)" }}>Gestão simples para sua beleza</p>
+          <div className="text-4xl mb-2">📅</div>
+          <h1 className="text-2xl font-bold" style={{ color: "var(--primary-dark)" }}>Beleza em Dia</h1>
+          <p className="text-sm mt-1" style={{ color: "var(--muted)" }}>Agenda e financeiro para profissionais de beleza</p>
         </div>
 
         <div className="rounded-2xl shadow-sm p-6" style={{ background: "var(--card)", border: "1px solid var(--border)" }}>

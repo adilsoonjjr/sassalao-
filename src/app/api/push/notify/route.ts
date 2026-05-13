@@ -58,7 +58,7 @@ export async function POST(req: Request) {
         webpush.sendNotification(
           { endpoint: sub.endpoint, keys: { p256dh: sub.p256dh, auth: sub.auth } },
           JSON.stringify({
-            title: "Sassalão – Lembrete ⏰",
+            title: "Beleza em Dia – Lembrete ⏰",
             body: `${ag.clienteNome} às ${ag.horario} — ${ag.servico}`,
             url: "/agendamentos",
             whatsappUrl: ag.clienteTel

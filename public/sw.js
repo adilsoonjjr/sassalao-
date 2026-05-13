@@ -40,7 +40,7 @@ self.addEventListener("fetch", (e) => {
 
 // ── Push server-side (VAPID) ──────────────────────────────────────────────────
 self.addEventListener("push", (e) => {
-  let data = { title: "Sassalão", body: "Lembrete de agendamento", url: "/agendamentos", whatsappUrl: null };
+  let data = { title: "Beleza em Dia", body: "Lembrete de agendamento", url: "/agendamentos", whatsappUrl: null };
   try { data = { ...data, ...e.data.json() }; } catch {}
 
   const actions = [{ action: "agenda", title: "Ver agenda" }];
@@ -51,7 +51,7 @@ self.addEventListener("push", (e) => {
       body: data.body,
       icon: "/icons/icon-192.png",
       badge: "/icons/icon-192.png",
-      tag: "sassalao-lembrete",
+      tag: "belezaemdia-lembrete",
       renotify: true,
       actions,
       data: { url: data.url, whatsappUrl: data.whatsappUrl },

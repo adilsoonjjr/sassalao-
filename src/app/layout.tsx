@@ -3,13 +3,13 @@ import "./globals.css";
 import ServiceWorkerRegister from "@/components/ServiceWorkerRegister";
 
 export const metadata: Metadata = {
-  title: "Sassalão – Gestão para Profissionais de Beleza",
+  title: "Beleza em Dia – Agenda e Financeiro para Profissionais de Beleza",
   description: "Organize sua agenda e financeiro de forma simples",
   manifest: "/manifest.webmanifest",
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
-    title: "Sassalão",
+    title: "Beleza em Dia",
   },
   icons: {
     apple: [

@@ -22,8 +22,8 @@ export default function LandingPage() {
       {/* Nav */}
       <nav className="flex items-center justify-between px-6 py-4 max-w-5xl mx-auto">
         <div className="flex items-center gap-2">
-          <span className="text-2xl">✂️</span>
-          <span className="font-bold text-lg" style={{ color: "var(--primary-dark)" }}>Sassalão</span>
+          <span className="text-2xl">📅</span>
+          <span className="font-bold text-lg" style={{ color: "var(--primary-dark)" }}>Beleza em Dia</span>
         </div>
         <div className="flex items-center gap-3">
           <Link href="/login" className="text-sm font-medium hover:underline" style={{ color: "var(--muted)" }}>
@@ -49,7 +49,7 @@ export default function LandingPage() {
           <span style={{ color: "var(--primary)" }}>para profissionais de beleza</span>
         </h1>
         <p className="text-lg mb-8 max-w-xl mx-auto" style={{ color: "var(--muted)" }}>
-          Pare de usar caderno, planilha e cabeça. O Sassalão organiza sua agenda, avisa seus clientes pelo WhatsApp e mostra exatamente quanto você está lucrando.
+          Pare de usar caderno, planilha e cabeça. O Beleza em Dia organiza sua agenda, avisa seus clientes pelo WhatsApp e mostra exatamente quanto você está lucrando.
         </p>
         <div className="flex flex-col sm:flex-row gap-3 justify-center">
           <Link
@@ -200,10 +200,10 @@ export default function LandingPage() {
       {/* Footer */}
       <footer className="text-center py-8 text-sm" style={{ color: "var(--muted)" }}>
         <div className="flex items-center justify-center gap-2 mb-2">
-          <span>✂️</span>
-          <span className="font-bold" style={{ color: "var(--primary-dark)" }}>Sassalão</span>
+          <span>📅</span>
+          <span className="font-bold" style={{ color: "var(--primary-dark)" }}>Beleza em Dia</span>
         </div>
-        <p>© {new Date().getFullYear()} Sassalão · Gestão para profissionais de beleza</p>
+        <p>© {new Date().getFullYear()} Beleza em Dia · Agenda e financeiro para profissionais de beleza</p>
         <div className="flex justify-center gap-4 mt-2">
           <Link href="/login" className="hover:underline">Entrar</Link>
           <Link href="/cadastro" className="hover:underline">Cadastrar</Link>

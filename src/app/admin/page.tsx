@@ -71,9 +71,9 @@ export default function AdminPage() {
   return (
     <div className="min-h-screen p-6 max-w-6xl mx-auto" style={{ background: "var(--background)" }}>
       <div className="flex items-center gap-3 mb-8">
-        <span className="text-3xl">✂️</span>
+        <span className="text-3xl">📅</span>
         <div>
-          <h1 className="text-xl font-bold">Painel Admin – Sassalão</h1>
+          <h1 className="text-xl font-bold">Painel Admin – Beleza em Dia</h1>
           <p className="text-sm" style={{ color: "var(--muted)" }}>Gerenciamento de clientes e assinaturas</p>
         </div>
       </div>

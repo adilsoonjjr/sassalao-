@@ -16,7 +16,7 @@ export default function PagamentoSucessoPage() {
         <div className="text-6xl mb-4">🎉</div>
         <h1 className="text-2xl font-bold mb-2">Pagamento confirmado!</h1>
         <p className="mb-6" style={{ color: "var(--muted)" }}>
-          Sua assinatura está ativa. Bem-vindo ao Sassalão!
+          Sua assinatura está ativa. Bem-vindo ao Beleza em Dia!
         </p>
         <p className="text-sm" style={{ color: "var(--muted)" }}>
           Redirecionando para o app em instantes...

@@ -18,7 +18,7 @@ export async function POST(req: Request) {
 
   const isAnual = plano === "anual";
   const valor = isAnual ? 199 : 19.9;
-  const titulo = isAnual ? "Sassalão – Plano Anual" : "Sassalão – Plano Mensal";
+  const titulo = isAnual ? "Beleza em Dia – Plano Anual" : "Beleza em Dia – Plano Mensal";
 
   try {
     const result = await preference.create({

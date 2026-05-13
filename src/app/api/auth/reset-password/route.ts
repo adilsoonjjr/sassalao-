@@ -23,14 +23,14 @@ export async function POST(req: Request) {
   const link = `${process.env.NEXTAUTH_URL}/recuperar-senha/nova?token=${token}`;
 
   await resend.emails.send({
-    from: "Sassalão <noreply@sassalao.com.br>",
+    from: "Beleza em Dia <noreply@sassalao.com.br>",
     to: email,
-    subject: "Redefinir senha — Sassalão",
+    subject: "Redefinir senha — Beleza em Dia",
     html: `
       <div style="font-family:sans-serif;max-width:480px;margin:0 auto;padding:32px 24px">
         <h2 style="color:#7c3aed;margin-bottom:8px">Redefinir senha</h2>
         <p style="color:#555;margin-bottom:24px">
-          Recebemos uma solicitação para redefinir a senha da sua conta no <strong>Sassalão</strong>.
+          Recebemos uma solicitação para redefinir a senha da sua conta no <strong>Beleza em Dia</strong>.
           Clique no botão abaixo — o link expira em 1 hora.
         </p>
         <a href="${link}"
