@@ -12,14 +12,15 @@ export const metadata: Metadata = {
     title: "Beleza em Dia",
   },
   icons: {
+    icon: "/logo.svg",
     apple: [
-      { url: "/icons/icon-192.png", sizes: "192x192", type: "image/png" },
+      { url: "/logo.svg" },
     ],
   },
 };
 
 export const viewport: Viewport = {
-  themeColor: "#7c3aed",
+  themeColor: "#e8829a",
   width: "device-width",
   initialScale: 1,
   maximumScale:1,
