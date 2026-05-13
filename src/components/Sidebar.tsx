@@ -33,7 +33,7 @@ export default function Sidebar() {
     <>
       <div className="p-5 border-b" style={{ borderColor: "var(--border)" }}>
         <div className="flex items-center gap-3">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="12" y1="1" x2="12" y2="4" stroke="none"/><path d="M9 14l2 2 4-4"/></svg>
+          <img src="/logo.svg" alt="Beleza em Dia" className="w-9 h-9 flex-shrink-0" />
           <div>
             <p className="font-bold text-sm" style={{ color: "var(--primary-dark)" }}>Beleza em Dia</p>
             <p className="text-xs truncate max-w-[140px]" style={{ color: "var(--muted)" }}>{session?.user?.name}</p>
@@ -80,7 +80,7 @@ export default function Sidebar() {
       {/* Mobile top bar */}
       <div className="md:hidden fixed top-0 left-0 right-0 z-40 flex items-center justify-between px-4 py-3 shadow-sm" style={{ background: "var(--card)", borderBottom: "1px solid var(--border)" }}>
         <div className="flex items-center gap-2">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><path d="M9 14l2 2 4-4"/></svg>
+          <img src="/logo.svg" alt="Beleza em Dia" className="w-7 h-7" />
           <span className="font-bold text-sm" style={{ color: "var(--primary-dark)" }}>Beleza em Dia</span>
         </div>
         <button onClick={() => setMobileOpen(!mobileOpen)} className="text-2xl p-1">
