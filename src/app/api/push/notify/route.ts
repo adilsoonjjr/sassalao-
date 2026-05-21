@@ -3,12 +3,15 @@ import webpush from "web-push";
 import { prisma } from "@/lib/prisma";
 
 function isAuthorized(req: Request) {
+  const secret = process.env.CRON_SECRET;
+  if (!secret) return false;
+
   const url = new URL(req.url);
   const querySecret = url.searchParams.get("secret");
   const authHeader = req.headers.get("authorization");
   return (
-    querySecret === process.env.CRON_SECRET ||
-    authHeader === `Bearer ${process.env.CRON_SECRET}`
+    querySecret === secret ||
+    authHeader === `Bearer ${secret}`
   );
 }
 

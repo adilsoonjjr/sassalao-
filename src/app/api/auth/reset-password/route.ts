@@ -2,8 +2,14 @@ import { NextResponse } from "next/server";
 import { Resend } from "resend";
 import { prisma } from "@/lib/prisma";
 import crypto from "crypto";
+import { rateLimit } from "@/lib/rate-limit";
 
 export async function POST(req: Request) {
+  const ip = req.headers.get("x-forwarded-for") ?? "unknown";
+  if (!rateLimit(`reset:${ip}`, 3, 15 * 60 * 1000)) {
+    return NextResponse.json({ error: "Muitas tentativas. Tente novamente em 15 minutos." }, { status: 429 });
+  }
+
   const resend = new Resend(process.env.RESEND_API_KEY);
   const { email } = await req.json();
   if (!email) return NextResponse.json({ error: "E-mail obrigatório" }, { status: 400 });
@@ -12,15 +18,15 @@ export async function POST(req: Request) {
   // Sempre retorna ok para não revelar se e-mail existe
   if (!user) return NextResponse.json({ ok: true });
 
-  // Limpa tokens antigos do mesmo e-mail
   await prisma.passwordResetToken.deleteMany({ where: { email } });
 
-  const token = crypto.randomBytes(32).toString("hex");
+  const rawToken = crypto.randomBytes(32).toString("hex");
+  const hashedToken = crypto.createHash("sha256").update(rawToken).digest("hex");
   const expiresAt = new Date(Date.now() + 60 * 60 * 1000); // 1 hora
 
-  await prisma.passwordResetToken.create({ data: { email, token, expiresAt } });
+  await prisma.passwordResetToken.create({ data: { email, token: hashedToken, expiresAt } });
 
-  const link = `${process.env.NEXTAUTH_URL}/recuperar-senha/nova?token=${token}`;
+  const link = `${process.env.NEXTAUTH_URL}/recuperar-senha/nova?token=${rawToken}`;
 
   await resend.emails.send({
     from: "Beleza em Dia <noreply@sassalao.com.br>",

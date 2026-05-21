@@ -16,10 +16,10 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ id: st
   if (!session?.user?.id) return NextResponse.json({ error: "Não autorizado" }, { status: 401 });
   const { id } = await params;
 
-  const data = await req.json();
+  const { nome, telefone, email, observacoes } = await req.json();
   const cliente = await prisma.cliente.updateMany({
     where: { id, userId: session.user.id },
-    data,
+    data: { nome, telefone, email, observacoes },
   });
 
   return NextResponse.json(cliente);

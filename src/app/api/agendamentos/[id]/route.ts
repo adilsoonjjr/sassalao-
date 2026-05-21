@@ -39,6 +39,6 @@ export async function DELETE(req: Request, { params }: { params: Promise<{ id: s
   const existing = await prisma.agendamento.findFirst({ where: { id, userId } });
   if (!existing) return NextResponse.json({ error: "Não encontrado" }, { status: 404 });
 
-  await prisma.agendamento.delete({ where: { id } });
+  await prisma.agendamento.deleteMany({ where: { id, userId } });
   return NextResponse.json({ ok: true });
 }

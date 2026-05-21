@@ -105,3 +105,8 @@ model PasswordResetToken {
   expiresAt DateTime
   createdAt DateTime @default(now())
 }
+
+model ProcessedPayment {
+  paymentId String   @id
+  createdAt DateTime @default(now())
+}

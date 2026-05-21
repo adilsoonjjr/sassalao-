@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { MercadoPagoConfig, Preference } from "mercadopago";
+import crypto from "crypto";
 
 export async function POST(req: Request) {
   const session = await auth();
@@ -36,7 +37,13 @@ export async function POST(req: Request) {
           email: session.user.email ?? "",
           name: session.user.name ?? "",
         },
-        external_reference: `${session.user.id}|${plano}`,
+        external_reference: (() => {
+          const hmac = crypto
+            .createHmac("sha256", process.env.NEXTAUTH_SECRET || "")
+            .update(`${session.user.id}:${plano}`)
+            .digest("hex");
+          return `${session.user.id}|${plano}|${hmac}`;
+        })(),
         payment_methods: {
           installments: 12,
         },
